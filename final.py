@@ -118,7 +118,7 @@ try:
     serverAdd = ('', PORT)
     server = HTTPServer(serverAdd, ServiceHandler)
     server.serve_forever()
-	print('Started httpserver on port ' , PORT)
+	print('Started httpserver on port {PORT}')
 
 except KeyboardInterrupt:
     print ('CTRL + C RECEIVED - Shutting down the REST server')
