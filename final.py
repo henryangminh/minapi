@@ -115,7 +115,7 @@ PORT=os.environ['PORT']
 
 #Server Initialization
 try:
-    server = ThreadedTCPServer(('', PORT), myHandler)
+    server = ThreadedTCPServer(('', PORT), ServiceHandler)
     print ('Started httpserver on port ' , PORT)
     ip,port = server.server_address
     server_thread = threading.Thread(target=server.serve_forever)
