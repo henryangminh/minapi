@@ -111,17 +111,12 @@ class ServiceHandler(BaseHTTPRequestHandler):
 			self.wfile.write(bytes(error,'utf-8'))
 			self.send_response(404)
 
-PORT=os.environ['PORT']
+PORT=int(os.environ['PORT'])
 
 #Server Initialization
 try:
-    server = ThreadedTCPServer(('', PORT), ServiceHandler)
-    print ('Started httpserver on port ' , PORT)
-    ip,port = server.server_address
-    server_thread = threading.Thread(target=server.serve_forever)
-    server_thread.daemon = True
-    server_thread.start()
-    allow_reuse_address = True
+    serverAdd = ('', PORT)
+    server = HTTPServer(serverAdd, ServiceHandler)
     server.serve_forever()
 
 except KeyboardInterrupt:
