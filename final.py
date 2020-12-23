@@ -115,11 +115,11 @@ PORT=int(os.environ['PORT'])
 
 #Server Initialization
 try:
-    serverAdd = ('', PORT)
-    server = HTTPServer(serverAdd, ServiceHandler)
-    server.serve_forever()
+	serverAdd = ('', PORT)
+	server = HTTPServer(serverAdd, ServiceHandler)
+	server.serve_forever()
 	print(f'Started httpserver on port {PORT}')
-
+	
 except KeyboardInterrupt:
     print ('CTRL + C RECEIVED - Shutting down the REST server')
     server.socket.close()
