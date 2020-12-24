@@ -2,15 +2,14 @@ import http.server
 from http.server import HTTPServer, BaseHTTPRequestHandler
 import socketserver
 import threading
+from urllib.parse import urlparse
+import re
 import os
 import json
 
 #open json file and give it to data variable as a dictionary
 with open("db.json") as data_file:
 	data = json.load(data_file)
-
-class ThreadedTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
-    pass
 
 #Defining a HTTP request Handler class
 class ServiceHandler(BaseHTTPRequestHandler):
@@ -35,13 +34,32 @@ class ServiceHandler(BaseHTTPRequestHandler):
 		self.send_response(200)
 		self.send_header('Content-type','text/json')
 		self.end_headers()
-		#prints all the keys and values of the json file
-		self.wfile.write(json.dumps(data).encode())
+		#prints all the keys and values of the json file\
+		path = self.path
+		
+		if(path=='/'):
+			self.wfile.write('Welcome to minapi'.encode())
+		
+		data_pattern = re.compile(r'/data$')
+		data_pattern_id = re.compile(r'/data/\w+')
 
-    	######
-    	#VIEW#
-    	######
-    	#VIEW method defination
+		if(re.search(data_pattern, path)):
+			self.wfile.write(json.dumps(data).encode())
+
+		if(re.search(data_pattern_id, path)):
+			self.wfile.write(path.split('/')[-1].encode())
+
+		# else:
+		# 	# query = urlparse(self.path).query
+		# 	# query_components = dict(qc.split('=') for qc in query.split("&"))
+		# 	path = self.path
+		# 	path = path.split('/')[1:]
+		# 	self.wfile.write(json.dumps(path).encode())
+
+	######
+	#VIEW#
+	######
+	#VIEW method defination
 	def do_VIEW(self):
 		#dict var. for pretty print
 		display = {}
@@ -116,9 +134,11 @@ PORT=int(os.environ['PORT'])
 #Server Initialization
 try:
 	serverAdd = ('', PORT)
+	# serverAdd = ('', 8080)
+	print(f'Started httpserver on port {PORT}')
 	server = HTTPServer(serverAdd, ServiceHandler)
 	server.serve_forever()
-	print(f'Started httpserver on port {PORT}')
+	
 	
 except KeyboardInterrupt:
     print ('CTRL + C RECEIVED - Shutting down the REST server')
