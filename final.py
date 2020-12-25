@@ -48,7 +48,7 @@ class ServiceHandler(BaseHTTPRequestHandler):
 
 		if(re.search(data_pattern_id, path)):
 			# self.wfile.write(path.split('/')[-1].encode())
-			self.wfile.write(os.environ['DATABASE_URL'])
+			self.wfile.write(os.environ['DATABASE_URL'].encode())
 
 		# else:
 		# 	# query = urlparse(self.path).query
