@@ -118,6 +118,7 @@ class ServiceHandler(BaseHTTPRequestHandler):
 	#DELETE method defination
 	def do_DELETE(self):
 		temp = self._set_headers()
+		self.wfile.write(temp.encode())
 		#check if the key is present in the dictionary
 		if temp in data:
 			del data[temp]
@@ -129,13 +130,13 @@ class ServiceHandler(BaseHTTPRequestHandler):
 			self.wfile.write(bytes(error,'utf-8'))
 			self.send_response(404)
 
-PORT=int(os.environ['PORT'])
+# PORT=int(os.environ['PORT'])
 
 #Server Initialization
 try:
-	serverAdd = ('', PORT)
-	# serverAdd = ('', 8080)
-	print(f'Started httpserver on port {PORT}')
+	# serverAdd = ('', PORT)
+	serverAdd = ('', 8080)
+	# print(f'Started httpserver on port {PORT}')
 	server = HTTPServer(serverAdd, ServiceHandler)
 	server.serve_forever()
 	
