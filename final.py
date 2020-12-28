@@ -36,10 +36,10 @@ class ServiceHandler(BaseHTTPRequestHandler):
 		self.end_headers()
 		#prints all the keys and values of the json file\
 		path = self.path
-		
+
 		if(path=='/'):
 			self.wfile.write('Welcome to minapi'.encode())
-		
+
 		data_pattern = re.compile(r'/data$')
 		data_pattern_id = re.compile(r'/data/\w+')
 
@@ -47,7 +47,8 @@ class ServiceHandler(BaseHTTPRequestHandler):
 			self.wfile.write(json.dumps(data).encode())
 
 		if(re.search(data_pattern_id, path)):
-			self.wfile.write(path.split('/')[-1].encode())
+			# self.wfile.write(path.split('/')[-1].encode())
+			self.wfile.write(os.environ.get('DATABASE_URL').encode())
 
 		# else:
 		# 	# query = urlparse(self.path).query
@@ -139,8 +140,8 @@ try:
 	# print(f'Started httpserver on port {PORT}')
 	server = HTTPServer(serverAdd, ServiceHandler)
 	server.serve_forever()
-	
-	
+
+
 except KeyboardInterrupt:
     print ('CTRL + C RECEIVED - Shutting down the REST server')
     server.socket.close()
