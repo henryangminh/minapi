@@ -35,5 +35,4 @@ class Database:
 			for rows in self.cursor.fetchall():
 				row = [key for key in rows]
 				rs.append(row)
-
 			return rs
