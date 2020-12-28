@@ -42,11 +42,11 @@ class ServiceHandler(BaseHTTPRequestHandler):
 
 		if(re.search(data_pattern, path)):
 			# self.wfile.write(json.dumps(data).encode())
-			conn = DbConnection().connect()
+			conn = DbConnection()
+			conn = conn.connect()
 			db = Database(conn)
 			rs = db.execute("SELECT * FROM users")
-			# print(rs.header)
-			rs_json = json.dumps(rs.header)
+			rs_json = json.dumps(rs.rows)
 			self.wfile.write(rs_json.encode())
 
 

@@ -8,10 +8,9 @@ class DbConnection:
 
     def connect(self):
         try:
-            print(self.database_url)
             conn = psycopg2.connect(self.database_url)
             return conn
-        
+
         except (Exception, psycopg2.DatabaseError) as error:
             print ("Error in transction Reverting all other operations of a transction ", error)
             conn.rollback()
@@ -24,5 +23,3 @@ class DbConnection:
     #         func(*args, **kwargs)
     #         conn.close()
     #     return decorator
-
-            
