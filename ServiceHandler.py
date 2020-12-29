@@ -1,8 +1,8 @@
 from http.server import BaseHTTPRequestHandler
 import json
 import re
-from Database.DbConnection import DbConnection
-from Database.Database import Database
+from src.Model import users
+from src.Database.Database import Database
 
 #open json file and give it to data variable as a dictionary
 with open("db.json") as data_file:
@@ -38,18 +38,15 @@ class ServiceHandler(BaseHTTPRequestHandler):
 			self.wfile.write('Welcome to minapi'.encode())
 
 		data_pattern = re.compile(r'/user$')
-		data_pattern_id = re.compile(r'/user/\w+')
-
 		if(re.search(data_pattern, path)):
 			# self.wfile.write(json.dumps(data).encode())
-			conn = DbConnection()
-			conn = conn.connect()
-			db = Database(conn)
-			rs = db.execute("SELECT * FROM users")
-			rs_json = json.dumps(rs.rows)
+			# db = Database()
+			# rs = db.execute("SELECT * FROM users")
+			rs = users.get_all()
+			rs_json = json.dumps(rs)
 			self.wfile.write(rs_json.encode())
 
-
+		data_pattern_id = re.compile(r'/user/\w+')
 		if(re.search(data_pattern_id, path)):
 			# self.wfile.write(path.split('/')[-1].encode())
 			# self.wfile.write(os.environ.get('DATABASE_URL').encode())

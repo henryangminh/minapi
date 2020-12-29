@@ -130,18 +130,3 @@ class ServiceHandler(BaseHTTPRequestHandler):
 			error = "NOT FOUND!"
 			self.wfile.write(bytes(error,'utf-8'))
 			self.send_response(404)
-
-# PORT=int(os.environ['PORT'])
-
-#Server Initialization
-try:
-	# serverAdd = ('', PORT)
-	serverAdd = ('', 8080)
-	# print(f'Started httpserver on port {PORT}')
-	server = HTTPServer(serverAdd, ServiceHandler)
-	server.serve_forever()
-
-
-except KeyboardInterrupt:
-    print ('CTRL + C RECEIVED - Shutting down the REST server')
-    server.socket.close()

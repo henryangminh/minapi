@@ -1,13 +1,13 @@
-# from DbConnection import DbConnection
-
-# db = DbConnection()
+from .DbConnection import DbConnection
 
 class Database:
-	def __init__(self, conn):
+	def __init__(self, conn=None):
 		self.conn = conn
 
 	def make_connection(func):
 		def decorator(self, sql):
+			self.conn = DbConnection()
+			self.conn = self.conn.connect()
 			self.conn.commit()
 			rs = func(self, sql)
 			self.conn.close()
@@ -31,8 +31,10 @@ class Database:
 			return [column[0] for column in self.cursor.description]
 
 		def get_rows(self):
-			rs = []
-			for rows in self.cursor.fetchall():
-				row = [key for key in rows]
-				rs.append(row)
-			return rs
+			# rs = []
+			# for rows in self.cursor.fetchall():
+			# 	row = [key for key in rows]
+			# 	rs.append(row)
+			# return rs
+			return [dict((self.cursor.description[i][0], value) \
+            for i, value in enumerate(row)) for row in self.cursor.fetchall()]
