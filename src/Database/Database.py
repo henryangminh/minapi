@@ -10,6 +10,7 @@ class Database:
 			self.conn = self.conn.connect()
 			self.conn.commit()
 			rs = func(self, sql)
+			self.conn.commit()
 			self.conn.close()
 			return rs
 		return decorator
@@ -31,10 +32,5 @@ class Database:
 			return [column[0] for column in self.cursor.description]
 
 		def get_rows(self):
-			# rs = []
-			# for rows in self.cursor.fetchall():
-			# 	row = [key for key in rows]
-			# 	rs.append(row)
-			# return rs
 			return [dict((self.cursor.description[i][0], value) \
             for i, value in enumerate(row)) for row in self.cursor.fetchall()]

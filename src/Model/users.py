@@ -29,4 +29,17 @@ class users:
 
 	def __str__(self):
 		return ''.join(f"{attr}: {value}, " for attr, value in self.__dict__.items())[:-2]
-	# def get_by_id():
+
+	@staticmethod
+	def get_by_id(id):
+		sql = f"SELECT * FROM users WHERE user_id = '{id}'"
+		db = Database()
+		rs = db.execute(sql)
+		return rs.rows
+
+	@staticmethod
+	def insert(user):
+		sql = f"INSERT INTO users (user_id, email, password) VALUES {user.user_id}, {user.email}, {user.password}"
+		db = Database()
+		rs = db.execute(sql)
+		

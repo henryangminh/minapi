@@ -2,7 +2,7 @@ from http.server import BaseHTTPRequestHandler
 import json
 import re
 from src.Model import users
-from src.Database.Database import Database
+from src.Database import Database
 
 #open json file and give it to data variable as a dictionary
 with open("db.json") as data_file:
@@ -18,7 +18,7 @@ class ServiceHandler(BaseHTTPRequestHandler):
 		length = int(self.headers['Content-Length'])
 		#reads the contents of the request
 		content = self.rfile.read(length)
-		temp = str(content).strip('b\'')
+		temp = content.decode()
 		self.end_headers()
 		return temp
 
@@ -37,20 +37,17 @@ class ServiceHandler(BaseHTTPRequestHandler):
 		if(path=='/'):
 			self.wfile.write('Welcome to minapi'.encode())
 
-		data_pattern = re.compile(r'/user$')
-		if(re.search(data_pattern, path)):
-			# self.wfile.write(json.dumps(data).encode())
-			# db = Database()
-			# rs = db.execute("SELECT * FROM users")
+		user_pattern = re.compile(r'/user$')
+		if(re.search(user_pattern, path)):
 			rs = users.get_all()
 			rs_json = json.dumps(rs)
 			self.wfile.write(rs_json.encode())
 
-		data_pattern_id = re.compile(r'/user/\w+')
-		if(re.search(data_pattern_id, path)):
-			# self.wfile.write(path.split('/')[-1].encode())
-			# self.wfile.write(os.environ.get('DATABASE_URL').encode())
-			self.wfile.write("yebb".encode())
+		user_pattern_id = re.compile(r'/user/\w+')
+		if(re.search(user_pattern_id, path)):
+			rs = users.get_by_id(path.split('/')[-1])
+			rs_json = json.dumps(rs)
+			self.wfile.write(rs_json.encode())
 
 		# else:
 		# 	# query = urlparse(self.path).query
@@ -82,17 +79,26 @@ class ServiceHandler(BaseHTTPRequestHandler):
     ########
     #POST method defination
 	def do_POST(self):
+		# temp = self._set_headers()
+		# key=0
+		# #getting key and value of the data dictionary
+		# for key,value in data.items():
+		# 	pass
+		# index = int(key)+1
+		# data[str(index)]=str(temp)
+		# #write the changes to the json file
+		# with open("db.json",'w+') as file_data:
+		# 	json.dump(data,file_data)
+		# #self.wfile.write(json.dumps(data[str(index)]).encode())
+		path = self.path
+		if(path=='/'):
+			self.wfile.write('Welcome to minapi'.encode())
 		temp = self._set_headers()
-		key=0
-		#getting key and value of the data dictionary
-		for key,value in data.items():
-			pass
-		index = int(key)+1
-		data[str(index)]=str(temp)
-		#write the changes to the json file
-		with open("db.json",'w+') as file_data:
-			json.dump(data,file_data)
-		#self.wfile.write(json.dumps(data[str(index)]).encode())
+
+		user_pattern = re.compile(r'/register$')
+		if(re.search(user_pattern, path)):
+			self.wfile.write(temp.encode())
+
 
 	########
 	#UPDATE#
