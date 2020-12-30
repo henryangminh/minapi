@@ -3,6 +3,8 @@ import json
 import re
 from src.Model import users
 from src.Database import Database
+# from urllib.parse import unquote
+from src.utils.json_utils import to_dict
 
 #open json file and give it to data variable as a dictionary
 with open("db.json") as data_file:
@@ -93,11 +95,14 @@ class ServiceHandler(BaseHTTPRequestHandler):
 		path = self.path
 		if(path=='/'):
 			self.wfile.write('Welcome to minapi'.encode())
+
 		temp = self._set_headers()
+		temp = to_dict(temp)
 
 		user_pattern = re.compile(r'/register$')
 		if(re.search(user_pattern, path)):
-			self.wfile.write(temp.encode())
+			print(temp)
+			# self.wfile.write(temp.encode())
 
 
 	########

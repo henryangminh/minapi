@@ -14,12 +14,3 @@ class DbConnection:
         except (Exception, psycopg2.DatabaseError) as error:
             print ("Error in transction Reverting all other operations of a transction ", error)
             conn.rollback()
-
-    # @classmethod
-    # def make_connection(func):
-    #     def decorator(self, *args, **kwargs):
-    #         conn = self.connect()
-    #         conn.commit()
-    #         func(*args, **kwargs)
-    #         conn.close()
-    #     return decorator

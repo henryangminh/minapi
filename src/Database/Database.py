@@ -1,4 +1,5 @@
 from .DbConnection import DbConnection
+import re
 
 class Database:
 	def __init__(self, conn=None):
@@ -20,7 +21,14 @@ class Database:
 		if self.conn is not None:
 			with self.conn.cursor() as cursor:
 				cursor.execute(sql)
-				return Database.Results(cursor)
+
+				select_pattern = re.compile(r'^select', re.IGNORECASE)
+				if(re.search(select_pattern, sql)):
+					return Database.Results(cursor)
+
+				insert_pattern = re.compile(r'^insert', re.IGNORECASE)
+				if(re.search(insert_pattern, sql)):
+					return "Success"
 
 	class Results:
 		def __init__(self, cursor):
