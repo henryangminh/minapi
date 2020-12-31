@@ -21,10 +21,11 @@ class ServiceHandler(BaseHTTPRequestHandler):
 		#reads the contents of the request
 		content = self.rfile.read(length)
 		temp = content.decode()
+		temp = to_dict(temp)
 		self.end_headers()
 		return temp
 
-    ######
+	######
 	#LIST#
 	######
 	#GET Method Defination
@@ -51,13 +52,6 @@ class ServiceHandler(BaseHTTPRequestHandler):
 			rs_json = json.dumps(rs)
 			self.wfile.write(rs_json.encode())
 
-		# else:
-		# 	# query = urlparse(self.path).query
-		# 	# query_components = dict(qc.split('=') for qc in query.split("&"))
-		# 	path = self.path
-		# 	path = path.split('/')[1:]
-		# 	self.wfile.write(json.dumps(path).encode())
-
 	######
 	#VIEW#
 	######
@@ -76,33 +70,20 @@ class ServiceHandler(BaseHTTPRequestHandler):
 			self.wfile.write(bytes(error,'utf-8'))
 			self.send_response(404)
 
-    ########
-    #CREATE#
-    ########
-    #POST method defination
+	########
+	#CREATE#
+	########
+	#POST method defination
 	def do_POST(self):
-		# temp = self._set_headers()
-		# key=0
-		# #getting key and value of the data dictionary
-		# for key,value in data.items():
-		# 	pass
-		# index = int(key)+1
-		# data[str(index)]=str(temp)
-		# #write the changes to the json file
-		# with open("db.json",'w+') as file_data:
-		# 	json.dump(data,file_data)
-		# #self.wfile.write(json.dumps(data[str(index)]).encode())
 		path = self.path
 		if(path=='/'):
 			self.wfile.write('Welcome to minapi'.encode())
 
 		temp = self._set_headers()
-		temp = to_dict(temp)
 
 		user_pattern = re.compile(r'/register$')
 		if(re.search(user_pattern, path)):
-			print(temp)
-			# self.wfile.write(temp.encode())
+			users.insert(temp)
 
 
 	########
@@ -110,36 +91,32 @@ class ServiceHandler(BaseHTTPRequestHandler):
 	########
 	#PUT method Defination
 	def do_PUT(self):
+		path = self.path
+		if(path=='/'):
+			self.wfile.write('Welcome to minapi'.encode())
+
 		temp = self._set_headers()
-		#seprating input into key and value
-		x = temp[:1]
-		y = temp[2:]
-		#check if key is in data
-		if x in data:
-			data[x] = y
-			#write the changes to file
-			with open("db.json",'w+') as file_data:
-				json.dump(data,file_data)
-			#self.wfile.write(json.dumps(data[str(x)]).encode())
-		else:
-			error = "NOT FOUND!"
-			self.wfile.write(bytes(error,'utf-8'))
-			self.send_response(404)
+
+		change_email_pattern = re.compile(r'/change_email$')
+		if(re.search(change_email_pattern, path)):
+			users.change_email(temp)
+
+		change_pass_pattern = re.compile(r'/change_pass$')
+		if(re.search(change_pass_pattern, path)):
+			users.change_pass(temp)
+
 
 	########
 	#DELETE#
 	########
 	#DELETE method defination
 	def do_DELETE(self):
+		path = self.path
+		if(path=='/'):
+			self.wfile.write('Welcome to minapi'.encode())
+
 		temp = self._set_headers()
-		self.wfile.write(temp.encode())
-		#check if the key is present in the dictionary
-		if temp in data:
-			del data[temp]
-			#write the changes to json file
-			with open("db.json",'w+') as file_data:
-				json.dump(data,file_data)
-		else:
-			error = "NOT FOUND!"
-			self.wfile.write(bytes(error,'utf-8'))
-			self.send_response(404)
+
+		delete_user_pattern = re.compile(r'/delete_user$')
+		if(re.search(delete_user_pattern, path)):
+			users.delete(temp.get('user_id'))	

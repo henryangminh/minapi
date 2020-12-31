@@ -1,5 +1,7 @@
 from ..Database import Database
 import json
+import uuid
+import hashlib
 
 class users:
 	def __init__(self, dictionary):
@@ -38,8 +40,33 @@ class users:
 		return rs.rows
 
 	@staticmethod
-	def insert(user):
-		sql = f"INSERT INTO users (user_id, email, password) VALUES {user.user_id}, {user.email}, {user.password}"
+	def insert(user_dict):
+		user = users(user_dict)
+		user.email = user.email.lower()
+		user.user_id = uuid.uuid1()
+		user.password = hashlib.md5(user.password.encode()).hexdigest()
+		sql = f"INSERT INTO users (user_id, email, password) VALUES ('{user.user_id}', '{user.email}', '{user.password}');"
 		db = Database()
-		rs = db.execute(sql)
-		
+		db.execute(sql)
+
+	@staticmethod
+	def change_email(user_dict):
+		user = users(user_dict)
+		user.email = user.email.lower()
+		sql=f"UPDATE users SET email = '{user.email}' WHERE user_id = '{user.user_id}'"
+		db = Database()
+		db.execute(sql)
+
+	@staticmethod
+	def change_pass(user_dict):
+		user = users(user_dict)
+		user.password = hashlib.md5(user.password.encode())
+		sql=f"UPDATE users SET password = '{user.password}' WHERE user_id = '{user.user_id}'"
+		db = Database()
+		db.execute(sql)
+
+	@staticmethod
+	def delete(id):
+		sql = f"DELETE FROM users WHERE user_id = '{id}'"
+		db = Database()
+		db.execute(sql)

@@ -26,8 +26,7 @@ class Database:
 				if(re.search(select_pattern, sql)):
 					return Database.Results(cursor)
 
-				insert_pattern = re.compile(r'^insert', re.IGNORECASE)
-				if(re.search(insert_pattern, sql)):
+				else:
 					return "Success"
 
 	class Results:
