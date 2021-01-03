@@ -70,3 +70,10 @@ class users:
 		sql = f"DELETE FROM users WHERE user_id = '{id}'"
 		db = Database()
 		db.execute(sql)
+
+	def check_login(self):
+		user_temp = users.get_by_id(self.user_id)
+		return True if user_temp.password == self.password else False
+
+	def generate_token(self):
+		pass

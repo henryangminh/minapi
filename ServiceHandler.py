@@ -3,12 +3,8 @@ import json
 import re
 from src.Model import users
 from src.Database import Database
-# from urllib.parse import unquote
 from src.utils.json_utils import to_dict
 
-#open json file and give it to data variable as a dictionary
-with open("db.json") as data_file:
-	data = json.load(data_file)
 
 #Defining a HTTP request Handler class
 class ServiceHandler(BaseHTTPRequestHandler):
@@ -34,7 +30,7 @@ class ServiceHandler(BaseHTTPRequestHandler):
 		self.send_response(200)
 		self.send_header('Content-type','text/json')
 		self.end_headers()
-		#prints all the keys and values of the json file\
+		#prints all the keys and values of the json file
 		path = self.path
 
 		if(path=='/'):
@@ -56,19 +52,19 @@ class ServiceHandler(BaseHTTPRequestHandler):
 	#VIEW#
 	######
 	#VIEW method defination
-	def do_VIEW(self):
-		#dict var. for pretty print
-		display = {}
-		temp = self._set_headers()
-		#check if the key is present in the dictionary
-		if temp in data:
-			display[temp] = data[temp]
-			#print the keys required from the json file
-			self.wfile.write(json.dumps(display).encode())
-		else:
-			error = "NOT FOUND!"
-			self.wfile.write(bytes(error,'utf-8'))
-			self.send_response(404)
+	# def do_VIEW(self):
+	# 	#dict var. for pretty print
+	# 	display = {}
+	# 	temp = self._set_headers()
+	# 	#check if the key is present in the dictionary
+	# 	if temp in data:
+	# 		display[temp] = data[temp]
+	# 		#print the keys required from the json file
+	# 		self.wfile.write(json.dumps(display).encode())
+	# 	else:
+	# 		error = "NOT FOUND!"
+	# 		self.wfile.write(bytes(error,'utf-8'))
+	# 		self.send_response(404)
 
 	########
 	#CREATE#
@@ -84,6 +80,11 @@ class ServiceHandler(BaseHTTPRequestHandler):
 		user_pattern = re.compile(r'/register$')
 		if(re.search(user_pattern, path)):
 			users.insert(temp)
+
+		login_pattern = re.compile(r'/login$')
+		if(re.search(login_pattern, path)):
+			user = users(temp)
+			user.check_login()
 
 
 	########
@@ -119,4 +120,4 @@ class ServiceHandler(BaseHTTPRequestHandler):
 
 		delete_user_pattern = re.compile(r'/delete_user$')
 		if(re.search(delete_user_pattern, path)):
-			users.delete(temp.get('user_id'))	
+			users.delete(temp.get('user_id'))
