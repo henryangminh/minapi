@@ -50,9 +50,7 @@ class users:
 		rs = db.execute(sql)
 		return rs.rows
 
-	@staticmethod
-	def insert(user_dict):
-		user = users(user_dict)
+	def insert(user):
 		user.email = user.email.lower()
 		user.user_id = uuid.uuid1()
 		user.password = hashlib.md5(user.password.encode()).hexdigest()
@@ -60,25 +58,20 @@ class users:
 		db = Database()
 		db.execute(sql)
 
-	@staticmethod
-	def change_email(user_dict):
-		user = users(user_dict)
+	def change_email(user):
 		user.email = user.email.lower()
 		sql=f"UPDATE users SET email = '{user.email}' WHERE user_id = '{user.user_id}'"
 		db = Database()
 		db.execute(sql)
 
-	@staticmethod
-	def change_pass(user_dict):
-		user = users(user_dict)
+	def change_pass(user):
 		user.password = hashlib.md5(user.password.encode())
 		sql=f"UPDATE users SET password = '{user.password}' WHERE user_id = '{user.user_id}'"
 		db = Database()
 		db.execute(sql)
 
-	@staticmethod
-	def delete(id):
-		sql = f"DELETE FROM users WHERE user_id = '{id}' OR email = '{id}'"
+	def delete(user):
+		sql = f"DELETE FROM users WHERE user_id = '{user.user_id}' OR email = '{user.email}'"
 		db = Database()
 		db.execute(sql)
 

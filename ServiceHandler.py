@@ -80,7 +80,8 @@ class ServiceHandler(BaseHTTPRequestHandler):
 
 		user_pattern = re.compile(r'/register$')
 		if(re.search(user_pattern, path)):
-			users.insert(temp)
+			user = users(temp)
+			user.insert()
 
 		login_pattern = re.compile(r'/login$')
 		if(re.search(login_pattern, path)):
@@ -106,11 +107,13 @@ class ServiceHandler(BaseHTTPRequestHandler):
 
 		change_email_pattern = re.compile(r'/change_email$')
 		if(re.search(change_email_pattern, path)):
-			users.change_email(temp)
+			user = users(temp)
+			user.change_email()
 
 		change_pass_pattern = re.compile(r'/change_pass$')
 		if(re.search(change_pass_pattern, path)):
-			users.change_pass(temp)
+			user = users(temp)
+			user.change_pass()
 
 
 	########
@@ -126,4 +129,5 @@ class ServiceHandler(BaseHTTPRequestHandler):
 
 		delete_user_pattern = re.compile(r'/delete_user$')
 		if(re.search(delete_user_pattern, path)):
-			users.delete(temp.get('user_id'))
+			user = users(temp)
+			user.delete(user)
