@@ -2,6 +2,11 @@ from ..Database import Database
 import json
 import uuid
 import hashlib
+import jwt
+from datetime import datetime, timedelta
+from ..Auth import Auth
+
+SECRET_KEY = 'minapi'
 
 class users:
 	def __init__(self, dictionary):
@@ -19,7 +24,6 @@ class users:
 	def to_object(row):
 		json_object=str(row).replace('\'','"')
 		a = json.loads(json_object, object_hook=users)
-		print(str(a))
 		return a
 
 	@staticmethod
@@ -35,6 +39,13 @@ class users:
 	@staticmethod
 	def get_by_id(id):
 		sql = f"SELECT * FROM users WHERE user_id = '{id}'"
+		db = Database()
+		rs = db.execute(sql)
+		return rs.rows
+
+	@staticmethod
+	def get_by_email(email):
+		sql = f"SELECT * FROM users WHERE email = '{email}'"
 		db = Database()
 		rs = db.execute(sql)
 		return rs.rows
@@ -67,13 +78,18 @@ class users:
 
 	@staticmethod
 	def delete(id):
-		sql = f"DELETE FROM users WHERE user_id = '{id}'"
+		sql = f"DELETE FROM users WHERE user_id = '{id}' OR email = '{id}'"
 		db = Database()
 		db.execute(sql)
 
 	def check_login(self):
-		user_temp = users.get_by_id(self.user_id)
-		return True if user_temp.password == self.password else False
+		user_temp = users.get_by_email(self.email)
+		user_temp = users.to_object(user_temp[0])
+		return True if user_temp.password == hashlib.md5(self.password.encode()).hexdigest() else False
 
 	def generate_token(self):
-		pass
+		if(self.check_login()):
+			return Auth.generate_token(self.email)
+			# print(token)
+			# untoken = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+			# print(untoken)

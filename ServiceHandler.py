@@ -4,6 +4,7 @@ import re
 from src.Model import users
 from src.Database import Database
 from src.utils.json_utils import to_dict
+from src.Auth import Auth
 
 
 #Defining a HTTP request Handler class
@@ -84,7 +85,12 @@ class ServiceHandler(BaseHTTPRequestHandler):
 		login_pattern = re.compile(r'/login$')
 		if(re.search(login_pattern, path)):
 			user = users(temp)
-			user.check_login()
+			self.wfile.write(user.generate_token().encode())
+
+		auth_pattern = re.compile(r'/auth$')
+		if(re.search(auth_pattern, path)):
+			auth = Auth(temp.get('token'))
+			print(auth.auth())
 
 
 	########
