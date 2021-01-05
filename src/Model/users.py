@@ -38,45 +38,38 @@ class users:
 
 	@staticmethod
 	def get_by_id(id):
-		sql = f"SELECT * FROM users WHERE user_id = '{id}'"
+		sql = f"SELECT * FROM users WHERE user_id = '{id}' OR email = '{id}'"
 		db = Database()
 		rs = db.execute(sql)
 		return rs.rows
 
-	@staticmethod
-	def get_by_email(email):
-		sql = f"SELECT * FROM users WHERE email = '{email}'"
-		db = Database()
-		rs = db.execute(sql)
-		return rs.rows
-
-	def insert(user):
-		user.email = user.email.lower()
-		user.user_id = uuid.uuid1()
-		user.password = hashlib.md5(user.password.encode()).hexdigest()
-		sql = f"INSERT INTO users (user_id, email, password) VALUES ('{user.user_id}', '{user.email}', '{user.password}');"
+	def insert(self):
+		self.email = self.email.lower()
+		self.user_id = uuid.uuid1()
+		self.password = hashlib.md5(self.password.encode()).hexdigest()
+		sql = f"INSERT INTO users (user_id, email, password) VALUES ('{self.user_id}', '{self.email}', '{self.password}');"
 		db = Database()
 		db.execute(sql)
 
-	def change_email(user):
-		user.email = user.email.lower()
-		sql=f"UPDATE users SET email = '{user.email}' WHERE user_id = '{user.user_id}'"
+	# def change_email(self):
+	# 	self.email = self.email.lower()
+	# 	sql=f"UPDATE users SET email = '{self.email}' WHERE user_id = '{self.user_id}'"
+	# 	db = Database()
+	# 	db.execute(sql)
+
+	def change_pass(self):
+		self.password = hashlib.md5(self.password.encode())
+		sql=f"UPDATE users SET password = '{self.password}' WHERE user_id = '{self.user_id}'"
 		db = Database()
 		db.execute(sql)
 
-	def change_pass(user):
-		user.password = hashlib.md5(user.password.encode())
-		sql=f"UPDATE users SET password = '{user.password}' WHERE user_id = '{user.user_id}'"
-		db = Database()
-		db.execute(sql)
-
-	def delete(user):
-		sql = f"DELETE FROM users WHERE user_id = '{user.user_id}' OR email = '{user.email}'"
+	def delete(self):
+		sql = f"DELETE FROM users WHERE user_id = '{self.user_id}' OR email = '{self.email}'"
 		db = Database()
 		db.execute(sql)
 
 	def check_login(self):
-		user_temp = users.get_by_email(self.email)
+		user_temp = users.get_by_id(self.email)
 		user_temp = users.to_object(user_temp[0])
 		return True if user_temp.password == hashlib.md5(self.password.encode()).hexdigest() else False
 

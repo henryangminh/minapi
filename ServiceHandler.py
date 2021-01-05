@@ -1,7 +1,7 @@
 from http.server import BaseHTTPRequestHandler
 import json
 import re
-from src.Model import users
+from src.Model import users, contacts
 from src.Database import Database
 from src.utils.json_utils import to_dict
 from src.Auth import Auth
@@ -49,6 +49,10 @@ class ServiceHandler(BaseHTTPRequestHandler):
 			rs_json = json.dumps(rs)
 			self.wfile.write(rs_json.encode())
 
+		test_pattern = re.compile(r'/test$')
+		if(re.search(test_pattern, path)):
+			contacts.abc('TMA')
+
 	######
 	#VIEW#
 	######
@@ -88,8 +92,8 @@ class ServiceHandler(BaseHTTPRequestHandler):
 			user = users(temp)
 			self.wfile.write(user.generate_token().encode())
 
-		auth_pattern = re.compile(r'/auth$')
-		if(re.search(auth_pattern, path)):
+		oauth_pattern = re.compile(r'/oauth$')
+		if(re.search(oauth_pattern, path)):
 			auth = Auth(temp.get('token'))
 			print(auth.auth())
 
@@ -105,10 +109,10 @@ class ServiceHandler(BaseHTTPRequestHandler):
 
 		temp = self._set_headers()
 
-		change_email_pattern = re.compile(r'/change_email$')
-		if(re.search(change_email_pattern, path)):
-			user = users(temp)
-			user.change_email()
+		# change_email_pattern = re.compile(r'/change_email$')
+		# if(re.search(change_email_pattern, path)):
+		# 	user = users(temp)
+		# 	user.change_email()
 
 		change_pass_pattern = re.compile(r'/change_pass$')
 		if(re.search(change_pass_pattern, path)):
@@ -130,4 +134,4 @@ class ServiceHandler(BaseHTTPRequestHandler):
 		delete_user_pattern = re.compile(r'/delete_user$')
 		if(re.search(delete_user_pattern, path)):
 			user = users(temp)
-			user.delete(user)
+			user.delete()
