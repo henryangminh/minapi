@@ -1,10 +1,10 @@
+from ..Auth import Auth
 from ..Database import Database
 import json
 import uuid
 import hashlib
 import jwt
 from datetime import datetime, timedelta
-from ..Auth import Auth
 
 SECRET_KEY = 'minapi'
 
@@ -51,12 +51,6 @@ class users:
 		db = Database()
 		db.execute(sql)
 
-	# def change_email(self):
-	# 	self.email = self.email.lower()
-	# 	sql=f"UPDATE users SET email = '{self.email}' WHERE user_id = '{self.user_id}'"
-	# 	db = Database()
-	# 	db.execute(sql)
-
 	def change_pass(self):
 		self.password = hashlib.md5(self.password.encode())
 		sql=f"UPDATE users SET password = '{self.password}' WHERE user_id = '{self.user_id}'"
@@ -75,7 +69,7 @@ class users:
 
 	def generate_token(self):
 		if(self.check_login()):
-			return Auth.Auth.generate_token(self.email)
+			return Auth.generate_token(self.email)
 			# print(token)
 			# untoken = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
 			# print(untoken)

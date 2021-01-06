@@ -1,6 +1,5 @@
 import jwt
 from datetime import datetime, timedelta, timezone
-from ..Model.users import users
 from ..utils.constant import SECRET_KEY
 
 
@@ -16,11 +15,13 @@ class Auth:
 	def auth(self):
 		try:
 			data = jwt.decode(self.token, SECRET_KEY, algorithms=["HS256"])
-			return data
+			return True, data
 		except jwt.ExpiredSignatureError:
-			return False
+			return False, 'Token is expired'
 		except jwt.InvalidIssuerError:
-			return False
+			return False, 'Invalid token'
+		except jwt.DecodeError:
+			return False, 'Decode Error'
 
 	# @staticmethod
 	# def authenticate(token):
@@ -35,11 +36,10 @@ class Auth:
 	@staticmethod
 	def authenticate(func):
 		def decorator(auth):
-			rs = auth.auth()
+			rs, response = auth.auth()
 			if(rs):
-				user = users(users.get_by_id(rs.get("email"))[0])
-				func(user)
+				func(response.get("email"))
 			else:
-				print('timeout')
+				print(response)
 
 		return decorator

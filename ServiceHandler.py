@@ -1,10 +1,10 @@
 from http.server import BaseHTTPRequestHandler
 import json
 import re
-from src.Model import users, contacts
-from src.Database import Database
-from src.utils.json_utils import to_dict
 from src.Auth import Auth
+from src.Database import Database
+from src.Model import users, contacts
+from src.utils.json_utils import to_dict
 
 
 #Defining a HTTP request Handler class

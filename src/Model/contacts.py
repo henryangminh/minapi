@@ -1,5 +1,6 @@
 from ..Database import Database
 from ..Auth import Auth
+from .users import users
 
 class contacts:
 	def __init__(self, contact_id, name, phone_no, email, address, uuid):
@@ -19,5 +20,6 @@ class contacts:
 
 	@staticmethod
 	@Auth.authenticate
-	def get_alls(user):
+	def get_alls(email):
+		user = users(users.get_by_id(email)[0])
 		print(user.user_id)
