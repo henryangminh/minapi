@@ -18,6 +18,6 @@ class contacts:
 		return rs.rows
 
 	@staticmethod
-	@Auth.authenticate('Hello ')
-	def abc(p):
-		print(p)
+	@Auth.authenticate
+	def get_alls(user):
+		print(user.user_id)

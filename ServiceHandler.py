@@ -49,9 +49,10 @@ class ServiceHandler(BaseHTTPRequestHandler):
 			rs_json = json.dumps(rs)
 			self.wfile.write(rs_json.encode())
 
-		test_pattern = re.compile(r'/test$')
+		test_pattern = re.compile(r'/test/\w+')
 		if(re.search(test_pattern, path)):
-			contacts.abc('TMA')
+			auth = Auth(path.split('/')[-1])
+			contacts.get_alls(auth)
 
 	######
 	#VIEW#

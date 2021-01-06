@@ -75,7 +75,7 @@ class users:
 
 	def generate_token(self):
 		if(self.check_login()):
-			return Auth.generate_token(self.email)
+			return Auth.Auth.generate_token(self.email)
 			# print(token)
 			# untoken = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
 			# print(untoken)
