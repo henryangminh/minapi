@@ -100,13 +100,14 @@ class ServiceHandler(BaseHTTPRequestHandler):
 
 		insert_contact_pattern = re.compile(r'/insert-contact$')
 		if(re.search(insert_contact_pattern, path)):
+			auth = Auth(temp.get('token'))
 			contact = contacts(
 				name = temp.get('name'),
 				phone_no = temp.get('phone_no'),
 				email = temp.get('email'),
 				address = temp.get('address')
 			)
-			contact.insert()
+			contact.insert(auth = auth)
 
 
 	########
