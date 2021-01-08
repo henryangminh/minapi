@@ -36,8 +36,8 @@ class Auth:
 	@staticmethod
 	def authenticate(func):
 		def decorator(self, **kwargs):
-			auth = kwargs.get('auth')
-			del kwargs['auth']
+			token = kwargs.get('token')
+			auth = Auth(kwargs.get('token'))
 			rs, response = auth.auth()
 			if(rs):
 				kwargs['email'] = response.get("email")

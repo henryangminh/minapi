@@ -49,10 +49,6 @@ class ServiceHandler(BaseHTTPRequestHandler):
 			rs_json = json.dumps(rs)
 			self.wfile.write(rs_json.encode())
 
-		test_pattern = re.compile(r'/test/\w+')
-		if(re.search(test_pattern, path)):
-			auth = Auth(path.split('/')[-1])
-			contacts.get_alls(auth)
 
 	######
 	#VIEW#
@@ -100,14 +96,13 @@ class ServiceHandler(BaseHTTPRequestHandler):
 
 		insert_contact_pattern = re.compile(r'/insert-contact$')
 		if(re.search(insert_contact_pattern, path)):
-			auth = Auth(temp.get('token'))
 			contact = contacts(
-				name = temp.get('name'),
-				phone_no = temp.get('phone_no'),
-				email = temp.get('email'),
-				address = temp.get('address')
+				contact_name = temp.get('contact_name'),
+				contact_phone_number = temp.get('contact_phone_number'),
+				contact_email = temp.get('contact_email'),
+				contact_address = temp.get('contact_address')
 			)
-			contact.insert(auth = auth)
+			contact.insert(token = temp.get('token'))
 
 
 	########

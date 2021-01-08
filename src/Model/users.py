@@ -41,7 +41,7 @@ class users:
 		sql = f"SELECT * FROM users WHERE user_id = '{id}' OR email = '{id}'"
 		db = Database()
 		rs = db.execute(sql)
-		return rs.rows
+		return users(rs.rows[0])
 
 	def insert(self):
 		self.email = self.email.lower()
@@ -64,7 +64,6 @@ class users:
 
 	def check_login(self):
 		user_temp = users.get_by_id(self.email)
-		user_temp = users.to_object(user_temp[0])
 		return True if user_temp.password == hashlib.md5(self.password.encode()).hexdigest() else False
 
 	def generate_token(self):
