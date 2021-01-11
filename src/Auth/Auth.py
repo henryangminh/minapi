@@ -35,13 +35,13 @@ class Auth:
 
 	@staticmethod
 	def authenticate(func):
-		def decorator(self, **kwargs):
+		def decorator(*args, **kwargs):
 			token = kwargs.get('token')
 			auth = Auth(kwargs.get('token'))
 			rs, response = auth.auth()
 			if(rs):
 				kwargs['email'] = response.get("email")
-				func(self, **kwargs)
+				func(*args, **kwargs)
 			else:
 				print(response)
 

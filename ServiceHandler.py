@@ -49,6 +49,10 @@ class ServiceHandler(BaseHTTPRequestHandler):
 			rs_json = json.dumps(rs)
 			self.wfile.write(rs_json.encode())
 
+		contact_pattern = re.compile(r'/contacts$')
+		if(re.search(contact_pattern, path)):
+			temp = self._set_headers()
+			contacts.get_all(token = temp.get('token'))
 
 	######
 	#VIEW#
@@ -126,6 +130,15 @@ class ServiceHandler(BaseHTTPRequestHandler):
 			user = users(temp)
 			user.change_pass()
 
+		update_contact_pattern = re.compile(r'/update_contact$')
+		if(re.search(update_contact_pattern, path)):
+			contact = contacts(
+				contact_name = temp.get('contact_name'),
+				contact_phone_number = temp.get('contact_phone_number'),
+				contact_email = temp.get('contact_email'),
+				contact_address = temp.get('contact_address')
+			)
+			contact.update(token = temp.get('token'))
 
 	########
 	#DELETE#

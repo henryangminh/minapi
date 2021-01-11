@@ -15,20 +15,13 @@ class contacts:
 	def __str__(self):
 		return ''.join(f"{attr}: {value}, " for attr, value in self.__dict__.items())[:-2]
 
-	# @staticmethod
-	# def get_all(email):
-	# 	sql = f"SELECT * FROM contacts WHERE email = '{email}'"
-	# 	db = Database()
-	# 	rs = db.execute(sql)
-	# 	return rs.rows
 
 	@staticmethod
 	@Auth.authenticate
 	def get_all(**kwargs):
-		# user = users(users.get_by_id(email)[0])
-		# print(user.user_id)
 		email = kwargs.get('email')
-		sql = f"SELECT * FROM contacts WHERE email = '{email}'"
+		user = users.get_by_id(email)
+		sql = f"SELECT * FROM contacts"  # WHERE user_id = '{user.user_id}'
 		db = Database()
 		rs = db.execute(sql)
 		return rs.rows
@@ -47,6 +40,19 @@ class contacts:
 			'{self.contact_address}', \
 			'{user.user_id}'\
 		)".replace('\t', '')
-		# print(sql)
 		db = Database()
 		rs = db.execute(sql)
+
+	@Auth.authenticate
+	def update(self, **kwargs):
+		email = kwargs.get('email')
+		user = users.get_by_id(email)
+		sql = f"UPDATE contacts SET \
+			contact_name = '{self.contact_name}', \
+			contact_phone_number = '{self.contact_phone_number}', \
+			contact_email = '{self.contact_email}', \
+			contact_address = '{self.contact_address}' \
+			WHERE user_id = '{user.user_id}' AND \
+			contact_id = '{self.contact_id}'\
+		".replace('\t', '')
+		print(sql)
