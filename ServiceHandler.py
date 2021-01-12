@@ -27,10 +27,6 @@ class ServiceHandler(BaseHTTPRequestHandler):
 	######
 	#GET Method Defination
 	def do_GET(self):
-		#defining all the headers
-		self.send_response(200)
-		self.send_header('Content-type','text/json')
-		self.end_headers()
 		#prints all the keys and values of the json file
 		path = self.path
 
@@ -39,12 +35,22 @@ class ServiceHandler(BaseHTTPRequestHandler):
 
 		user_pattern = re.compile(r'/user$')
 		if(re.search(user_pattern, path)):
+			#defining all the headers
+			self.send_response(200)
+			self.send_header('Content-type','text/json')
+			self.end_headers()
+
 			rs = users.get_all()
 			rs_json = json.dumps(rs)
 			self.wfile.write(rs_json.encode())
 
 		user_pattern_id = re.compile(r'/user/\w+')
 		if(re.search(user_pattern_id, path)):
+			#defining all the headers
+			self.send_response(200)
+			self.send_header('Content-type','text/json')
+			self.end_headers()
+
 			rs = users.get_by_id(path.split('/')[-1])
 			rs_json = json.dumps(rs)
 			self.wfile.write(rs_json.encode())
@@ -119,11 +125,6 @@ class ServiceHandler(BaseHTTPRequestHandler):
 			self.wfile.write('Welcome to minapi'.encode())
 
 		temp = self._set_headers()
-
-		# change_email_pattern = re.compile(r'/change_email$')
-		# if(re.search(change_email_pattern, path)):
-		# 	user = users(temp)
-		# 	user.change_email()
 
 		change_pass_pattern = re.compile(r'/change_pass$')
 		if(re.search(change_pass_pattern, path)):
