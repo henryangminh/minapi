@@ -58,7 +58,10 @@ class ServiceHandler(BaseHTTPRequestHandler):
 		contact_pattern = re.compile(r'/contacts$')
 		if(re.search(contact_pattern, path)):
 			temp = self._set_headers()
-			contacts.get_all(token = temp.get('token'))
+			rs = contacts.get_all(token = temp.get('token'))
+			print(rs)
+			rs_json = json.dumps(rs)
+			self.wfile.write(rs_json.encode())
 
 	######
 	#VIEW#

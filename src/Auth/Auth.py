@@ -41,8 +41,8 @@ class Auth:
 			rs, response = auth.auth()
 			if(rs):
 				kwargs['email'] = response.get("email")
-				func(*args, **kwargs)
+				return func(*args, **kwargs)
 			else:
-				print(response)
+				return response
 
 		return decorator

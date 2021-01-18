@@ -21,7 +21,7 @@ class contacts:
 	def get_all(**kwargs):
 		email = kwargs.get('email')
 		user = users.get_by_id(email)
-		sql = f"SELECT * FROM contacts"  # WHERE user_id = '{user.user_id}'
+		sql = f"SELECT * FROM contacts WHERE user_id = '{user.user_id}'"
 		db = Database()
 		rs = db.execute(sql)
 		return rs.rows
@@ -55,4 +55,5 @@ class contacts:
 			WHERE user_id = '{user.user_id}' AND \
 			contact_id = '{self.contact_id}'\
 		".replace('\t', '')
-		print(sql)
+		db = Database()
+		rs = db.execute(sql)
