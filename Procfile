@@ -1,1 +1,1 @@
-web: python final.py
+web: python setting.py
