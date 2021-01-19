@@ -31,6 +31,9 @@ class ServiceHandler(BaseHTTPRequestHandler):
 		path = self.path
 
 		if(path=='/'):
+			self.send_response(200)
+			self.send_header('Content-type','text/json')
+			self.end_headers()
 			self.wfile.write('Welcome to minapi'.encode())
 
 		# user_pattern = re.compile(r'/user$')
