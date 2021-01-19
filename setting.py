@@ -4,8 +4,8 @@ from ServiceHandler import ServiceHandler
 
 #Server Initialization
 if __name__ == "__main__":
-    # PORT = int(os.environ['PORT'])
-    PORT = 8080
+    PORT = int(os.environ['PORT'])
+    # PORT = 8080
 
     try:
         serverAdd = ('', PORT)

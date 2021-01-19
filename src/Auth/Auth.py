@@ -23,15 +23,6 @@ class Auth:
 		except jwt.DecodeError:
 			return False, 'Decode Error'
 
-	# @staticmethod
-	# def authenticate(token):
-	# 	def decorator(func):
-	# 		def wrap(p):
-	# 			auth = Auth(token)
-	# 			if(auth.auth()):
-	# 				func(p)
-	# 		return wrap
-	# 	return decorator
 
 	@staticmethod
 	def authenticate(func):
@@ -43,6 +34,7 @@ class Auth:
 				kwargs['email'] = response.get("email")
 				return func(*args, **kwargs)
 			else:
+				print(response)
 				return response
 
 		return decorator

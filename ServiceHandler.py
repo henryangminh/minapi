@@ -33,33 +33,40 @@ class ServiceHandler(BaseHTTPRequestHandler):
 		if(path=='/'):
 			self.wfile.write('Welcome to minapi'.encode())
 
-		user_pattern = re.compile(r'/user$')
-		if(re.search(user_pattern, path)):
-			#defining all the headers
-			self.send_response(200)
-			self.send_header('Content-type','text/json')
-			self.end_headers()
-
-			rs = users.get_all()
-			rs_json = json.dumps(rs)
-			self.wfile.write(rs_json.encode())
-
-		user_pattern_id = re.compile(r'/user/\w+')
-		if(re.search(user_pattern_id, path)):
-			#defining all the headers
-			self.send_response(200)
-			self.send_header('Content-type','text/json')
-			self.end_headers()
-
-			rs = users.get_by_id(path.split('/')[-1])
-			rs_json = json.dumps(rs)
-			self.wfile.write(rs_json.encode())
+		# user_pattern = re.compile(r'/user$')
+		# if(re.search(user_pattern, path)):
+		# 	#defining all the headers
+		# 	self.send_response(200)
+		# 	self.send_header('Content-type','text/json')
+		# 	self.end_headers()
+		#
+		# 	rs = users.get_all()
+		# 	rs_json = json.dumps(rs)
+		# 	self.wfile.write(rs_json.encode())
+		#
+		# user_pattern_id = re.compile(r'/user/\w+')
+		# if(re.search(user_pattern_id, path)):
+		# 	#defining all the headers
+		# 	self.send_response(200)
+		# 	self.send_header('Content-type','text/json')
+		# 	self.end_headers()
+		#
+		# 	rs = users.get_by_id(path.split('/')[-1])
+		# 	rs_json = json.dumps(rs)
+		# 	self.wfile.write(rs_json.encode())
 
 		contact_pattern = re.compile(r'/contacts$')
 		if(re.search(contact_pattern, path)):
 			temp = self._set_headers()
 			rs = contacts.get_all(token = temp.get('token'))
-			print(rs)
+			rs_json = json.dumps(rs)
+			self.wfile.write(rs_json.encode())
+
+		contact_id_partern = re.compile(r'/contacts-id$')
+		if(re.search(contact_id_partern, path)):
+			temp = self._set_headers()
+			contact = contacts(contact_id = temp.get('contact_id'))
+			rs = contact.get_by_id(token = temp.get('token'))
 			rs_json = json.dumps(rs)
 			self.wfile.write(rs_json.encode())
 
@@ -102,11 +109,6 @@ class ServiceHandler(BaseHTTPRequestHandler):
 			user = users(temp)
 			self.wfile.write(user.generate_token().encode())
 
-		oauth_pattern = re.compile(r'/oauth$')
-		if(re.search(oauth_pattern, path)):
-			auth = Auth(temp.get('token'))
-			print(auth.auth())
-
 		insert_contact_pattern = re.compile(r'/insert-contact$')
 		if(re.search(insert_contact_pattern, path)):
 			contact = contacts(
@@ -129,14 +131,15 @@ class ServiceHandler(BaseHTTPRequestHandler):
 
 		temp = self._set_headers()
 
-		change_pass_pattern = re.compile(r'/change_pass$')
+		change_pass_pattern = re.compile(r'/change-pass$')
 		if(re.search(change_pass_pattern, path)):
 			user = users(temp)
 			user.change_pass()
 
-		update_contact_pattern = re.compile(r'/update_contact$')
+		update_contact_pattern = re.compile(r'/update-contact$')
 		if(re.search(update_contact_pattern, path)):
 			contact = contacts(
+				contact_id = temp.get('contact_id'),
 				contact_name = temp.get('contact_name'),
 				contact_phone_number = temp.get('contact_phone_number'),
 				contact_email = temp.get('contact_email'),
@@ -155,7 +158,12 @@ class ServiceHandler(BaseHTTPRequestHandler):
 
 		temp = self._set_headers()
 
-		delete_user_pattern = re.compile(r'/delete_user$')
-		if(re.search(delete_user_pattern, path)):
-			user = users(temp)
-			user.delete()
+		# delete_user_pattern = re.compile(r'/delete_user$')
+		# if(re.search(delete_user_pattern, path)):
+		# 	user = users(temp)
+		# 	user.delete()
+
+		delete_contact_pattern = re.compile(r'/delete-contact$')
+		if(re.search(delete_contact_pattern, path)):
+			contact = contacts(contact_id = temp.get('contact_id'))
+			contact.delete(token = temp.get('token'))
